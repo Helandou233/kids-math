@@ -1,0 +1,78 @@
+/* ============================================================
+   tokens.css —— 设计变量（Design Token）
+   只定义变量，不写任何具体组件的样式。
+   主色 #FF8A3D（暖橙）、天蓝 #4CC9F0、草绿 #7BD389、暖黄 #FFD166、
+   粉 #FF6B9D、背景 #FFF9F0、主文字 #3D2C1E。
+   错误/柔和提示统一用柔和橙 #FF9F68，不使用刺眼大红。
+   ============================================================ */
+:root {
+  /* —— 品牌色 —— */
+  --km-orange: #FF8A3D;
+  --km-orange-dark: #F2701C;
+  --km-orange-soft: #FF9F68;   /* 柔和橙：用于“差一点点”等状态 */
+  --km-orange-wash: #FFE9D6;
+  --km-sky: #4CC9F0;
+  --km-sky-wash: #DDF4FD;
+  --km-green: #7BD389;
+  --km-green-dark: #55BC67;
+  --km-green-wash: #E2F7E6;
+  --km-yellow: #FFD166;
+  --km-yellow-wash: #FFF3D6;
+  --km-pink: #FF6B9D;
+  --km-pink-wash: #FFE2EC;
+
+  /* —— 中性色 —— */
+  --km-bg: #FFF9F0;
+  --km-card: #FFFFFF;
+  --km-text: #3D2C1E;
+  --km-text-soft: #7A6650;
+  --km-text-faint: #A9947C;
+  --km-line: #F0E2D0;
+  --km-mask: rgba(61, 44, 30, 0.55);
+
+  /* —— 形状 —— */
+  --km-radius-lg: 28px;
+  --km-radius-md: 20px;
+  --km-radius-sm: 14px;
+  --km-radius-pill: 999px;
+  --km-shadow-card: 0 6px 0 rgba(61, 44, 30, 0.10), 0 10px 22px rgba(61, 44, 30, 0.08);
+  --km-shadow-btn: 0 5px 0 rgba(61, 44, 30, 0.16);
+
+  /* —— 字号（移动端基准） —— */
+  --km-fs-body: 18px;      /* 正文 ≥18px */
+  --km-fs-btn: 20px;       /* 按钮文字 ≥20px */
+  --km-fs-title: 26px;
+  --km-fs-big: 34px;
+  --km-fs-problem: 48px;   /* 题目算式 ≥48px */
+
+  /* —— 尺寸 —— */
+  --km-tap: 64px;          /* 最小点击热区 64×64（≥56） */
+  --km-tap-sm: 56px;
+  --km-gap: 14px;
+  --km-page-pad: 16px;
+  --km-max-width: 480px;   /* 手机竖屏为第一设计尺寸（390×844） */
+
+  /* —— 安全区（刘海 / 底部横条） —— */
+  --km-safe-t: env(safe-area-inset-top, 0px);
+  --km-safe-b: env(safe-area-inset-bottom, 0px);
+  --km-safe-l: env(safe-area-inset-left, 0px);
+  --km-safe-r: env(safe-area-inset-right, 0px);
+
+  /* —— 动效时长 —— */
+  --km-dur-tap: 90ms;      /* 点击反馈 ≤100ms */
+  --km-dur-page: 220ms;    /* 页面切换 ≤250ms */
+  --km-dur-soft: 260ms;
+}
+
+/* 平板 / PC 向上适配：题目字号 ≥64px */
+@media (min-width: 768px) {
+  :root {
+    --km-fs-problem: 64px;
+    --km-fs-body: 20px;
+    --km-fs-btn: 22px;
+    --km-fs-title: 30px;
+    --km-fs-big: 40px;
+    --km-max-width: 560px;
+    --km-page-pad: 22px;
+  }
+}

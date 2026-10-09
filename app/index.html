@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#FF8A3D">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="description" content="数数的数学乐园 —— 给 6-9 岁小朋友的数学启蒙练习">
+<title>数数的数学乐园</title>
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/account.css">
+<link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+  <!-- 应用根节点：所有页面由 js/main.js 路由渲染到这里 -->
+  <div id="km-app" class="km-app"></div>
+
+  <!-- 飘字 / 轻提示层 -->
+  <div id="km-toast" class="km-toast-layer" aria-live="polite"></div>
+
+  <!-- 防沉迷休息蒙层 -->
+  <div id="km-rest" class="km-rest" hidden></div>
+
+  <!-- 传统 script 顺序加载：全部挂在 window.KM 命名空间下，不使用 ES module，
+       因此可以直接用 file:// 双击打开运行，无需构建、无需本地服务器。 -->
+  <script src="js/core/storage.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/core/rules.js"></script>
+  <script src="js/core/audio.js"></script>
+  <script src="js/data/knowledge.js"></script>
+  <script src="js/data/hints.js"></script>
+  <script src="js/core/generator.js"></script>
+  <script src="js/core/points.js"></script>
+  <script src="js/core/account.js"></script>
+  <script src="js/ui/dom.js"></script>
+  <script src="js/ui/account.js"></script>
+  <script src="js/ui/mascot.js"></script>
+  <script src="js/ui/animations.js"></script>
+  <script src="js/ui/home.js"></script>
+  <script src="js/ui/learn.js"></script>
+  <script src="js/ui/practice.js"></script>
+  <script src="js/ui/rewards.js"></script>
+  <script src="js/ui/selftest.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

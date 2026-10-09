@@ -1,0 +1,198 @@
+classDiagram
+    class Parent {
+      +UUID id
+      +string phoneMasked
+      +datetime consentAt
+      +__init__(id, phoneMasked)
+      +createChild(input) User
+      +updateSettings(userId, input) ParentSettings
+    }
+    class User {
+      +UUID id
+      +UUID parentId
+      +string nickname
+      +string avatarId
+      +int grade
+      +string status
+      +datetime createdAt
+      +__init__(id, parentId, nickname, grade)
+      +canPractice(now) bool
+    }
+    class PointsAccount {
+      +UUID userId
+      +int totalPoints
+      +int availablePoints
+      +int level
+      +int version
+      +__init__(userId)
+      +credit(totalDelta, availableDelta) void
+      +debitAvailable(delta) void
+      +recalculateLevel() int
+    }
+    class PointsLedger {
+      +UUID id
+      +UUID userId
+      +int deltaTotal
+      +int deltaAvailable
+      +int totalAfter
+      +int availableAfter
+      +string type
+      +string bizId
+      +string idempotencyKey
+      +datetime clientTs
+      +datetime serverTs
+      +__init__(event)
+    }
+    class KnowledgePoint {
+      +UUID id
+      +string code
+      +int grade
+      +string name
+      +string contentVersion
+      +string animationUrl
+      +__init__(code, grade, name)
+      +getHintTemplate(operation) HintTemplate
+    }
+    class HintTemplate {
+      +string templateId
+      +UUID kpId
+      +string operation
+      +string strategy
+      +string predicate
+      +string sourceRef
+      +string curriculum
+      +string reviewer
+      +HintToken[] l1Tokens
+      +HintToken[] l2Tokens
+      +string l3AnimationKey
+      +string contentVersion
+      +__init__(templateId, kpId, sourceRef)
+      +assertHasSource() bool
+      +render(level, params) RenderNode[]
+    }
+    class UserKpProgress {
+      +UUID userId
+      +UUID kpId
+      +string status
+      +int quizAttempts
+      +datetime masteredAt
+      +__init__(userId, kpId)
+      +start() void
+      +completeQuiz(correctCount) bool
+    }
+    class QuestionSet {
+      +UUID id
+      +UUID userId
+      +string mode
+      +string[] ops
+      +int difficultyLevel
+      +string seed
+      +string generatorVersion
+      +int totalCount
+      +int correctCount
+      +__init__(seed, version, config)
+      +complete() SetSummary
+    }
+    class Question {
+      +UUID id
+      +string expression
+      +Answer expectedAnswer
+      +Answer userAnswer
+      +bool isCorrect
+      +int hintLevel
+      +bool comboKept
+      +int difficultyLevel
+      +int elapsedMs
+      +__init__(spec)
+      +submit(answer) bool
+      +resolveCombo(streak, hasProtectCard) int
+    }
+    class ParentSettings {
+      +UUID userId
+      +int dailyLimitMin
+      +int sessionLimitMin
+      +time nightStart
+      +time nightEnd
+      +bool soundOn
+      +int setLength
+      +__init__(userId)
+      +allowsPractice(now, usage) bool
+    }
+    class QuestionGenerator {
+      +string version
+      +RuleSet rules
+      +__init__(version, rules)
+      +generateSet(config, seed) Question[]
+      +generateCandidate(op, range, rng) Question
+      +validateSet(questions) ValidationResult
+    }
+    class AdaptiveDifficultyService {
+      +__init__()
+      +decide(history, isFirst) int
+      +nextLevel(current, groupAccuracy) int
+    }
+    class HintEngine {
+      +TemplateRepository templates
+      +__init__(templates)
+      +precompute(question, kpCode) HintBundle
+      +unlock(bundle, currentLevel, attempt) HintStep
+    }
+    class AnswerJudge {
+      +__init__()
+      +judge(question, input) JudgeResult
+    }
+    class LocalLedgerRepository {
+      +Dexie db
+      +__init__(db)
+      +appendPending(event) void
+      +listPending(limit) LedgerEvent[]
+      +ack(keys, snapshot) void
+    }
+    class PointsSyncService {
+      +ApiClient api
+      +LocalLedgerRepository local
+      +__init__(api, local)
+      +hydrateSnapshot(userId) PointsAccount
+      +flushPending() SyncResult
+      +merge(server, localConfirmed, pending) PointsAccount
+    }
+    class AuthService {
+      +__init__(userRepo, tokenService, limiter)
+      +loginChild(profileId, pin) TokenPair
+      +verifyParentOtp(phone, code) TokenPair
+      +refresh(refreshToken) TokenPair
+    }
+    class PointsService {
+      +__init__(accountRepo, ledgerRepo, ruleRepo)
+      +applyEvent(event) LedgerResult
+      +applyBatch(events) BatchResult
+      +purchase(userId, sku, key) LedgerResult
+    }
+    class RetentionService {
+      +__init__(pointsService, taskRepo)
+      +checkin(userId, date, key) CheckinResult
+      +settleDailyTasks(userId, event) TaskResult
+      +checkBadges(userId, event) Badge[]
+    }
+
+    Parent "1" --> "0..5" User : 管理
+    User "1" *-- "1" PointsAccount : 拥有
+    User "1" --> "0..*" PointsLedger : 产生
+    User "1" --> "0..*" UserKpProgress : 学习
+    KnowledgePoint "1" --> "0..*" UserKpProgress : 被掌握
+    User "1" --> "0..*" QuestionSet : 完成
+    QuestionSet "1" *-- "1..20" Question : 包含
+    User "1" *-- "1" ParentSettings : 受管控
+    QuestionGenerator --> Question : 生成
+    AdaptiveDifficultyService --> QuestionGenerator : 提供等级
+    HintEngine --> KnowledgePoint : 使用模板
+    KnowledgePoint "1" *-- "1..*" HintTemplate : 结构化入库
+    HintEngine --> Question : 预计算提示
+    AnswerJudge --> Question : 判定
+    PointsSyncService --> LocalLedgerRepository : 读取/确认
+    PointsSyncService --> PointsService : 批量上报
+    AuthService --> Parent : 鉴权
+    AuthService --> User : 鉴权
+    PointsService --> PointsAccount : 原子更新
+    PointsService --> PointsLedger : 幂等写入
+    RetentionService --> PointsService : 发放积分

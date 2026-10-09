@@ -1,0 +1,96 @@
+/* ============================================================
+   responsive.css —— 手机端 / 平板 / PC 通用适配
+   移动端仍以 390×844 竖屏为第一设计尺寸；平板和 PC 逐步放大
+   字号、加宽画布，并把列表改为多列网格，充分利用宽屏空间。
+   本文件最后加载，可以安全覆盖前面文件的同权重规则。
+   ============================================================ */
+
+/* ---------------- 答题页双栏容器（所有屏宽的基础结构） ---------------- */
+.km-quiz-shell {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 14px;
+}
+.km-quiz-shell__main,
+.km-quiz-shell__side {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+}
+
+/* ---------------- 平板（≥768px）：适度放大 ---------------- */
+@media (min-width: 768px) {
+  .km-app { padding-top: 28px; padding-bottom: 40px; }
+  .km-entry { min-height: 124px; }
+  .km-badges { gap: 14px; }
+}
+
+/* ---------------- PC / 宽屏（≥900px）：多列布局 ---------------- */
+@media (min-width: 900px) {
+  :root {
+    --km-max-width: 1040px;
+    --km-page-pad: 28px;
+  }
+
+  body {
+    background:
+      radial-gradient(1200px 500px at 15% -10%, #FFE9D6 0%, rgba(255, 233, 214, 0) 60%),
+      radial-gradient(1000px 520px at 90% 0%, #DDF4FD 0%, rgba(221, 244, 253, 0) 55%),
+      var(--km-bg);
+  }
+
+  /* 首页三大入口：一行三列 */
+  .km-home-entries {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+  }
+  .km-home-entries > * { margin-top: 0; }
+  .km-entry {
+    flex-direction: column;
+    text-align: center;
+    min-height: 200px;
+    padding: 26px 18px;
+  }
+  .km-entry__icon { width: 84px; height: 84px; border-radius: 26px; }
+  .km-entry__icon svg { width: 52px; height: 52px; }
+
+  /* 知识点 / 特例卡：两列 */
+  .km-kp-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+  .km-kp-list > * { margin-top: 0; }
+
+  .km-sc-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    align-items: start;
+  }
+  .km-sc-list > * { margin-top: 0; }
+
+  /* 徽章墙：一行四枚 */
+  .km-badges { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+
+  /* 答题页：左侧题目/反馈，右侧键盘/操作 */
+  .km-quiz-shell {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(320px, 0.85fr);
+    gap: 22px;
+    align-items: start;
+  }
+  .km-keypad { gap: 12px; }
+  .km-key { min-height: 74px; border-radius: 18px; }
+
+  /* 练习结算与知识点详情：宽屏下收敛宽度，避免一行过长 */
+  .km-page .km-card.km-result { max-width: 720px; margin-left: auto; margin-right: auto; }
+}
+
+/* ---------------- 超大屏（≥1400px）：画布更宽但不再无限拉长 ---------------- */
+@media (min-width: 1400px) {
+  :root { --km-max-width: 1160px; }
+}

@@ -1,0 +1,111 @@
+/* ============================================================
+   account.css —— 账号登录 / 云同步页面样式
+   ============================================================ */
+
+.km-auth-card { padding: 20px 18px; }
+
+.km-auth-title {
+  font-size: 24px;
+  font-weight: 900;
+}
+
+.km-auth-desc {
+  font-size: 16px;
+  color: var(--km-text-soft);
+  margin-top: 8px;
+  line-height: 1.7;
+}
+.km-auth-desc code {
+  background: var(--km-yellow-wash);
+  color: #6A4A05;
+  border-radius: 6px;
+  padding: 1px 6px;
+  font-size: 14px;
+}
+
+.km-auth-code {
+  margin-top: 10px;
+  background: #3D2C1E;
+  color: #FFE9D6;
+  font-family: "SF Mono", "Menlo", "Consolas", monospace;
+  font-size: 14px;
+  line-height: 1.6;
+  padding: 12px 14px;
+  border-radius: var(--km-radius-sm);
+  word-break: break-all;
+}
+
+.km-auth-email {
+  font-size: 20px;
+  font-weight: 800;
+  margin-top: 6px;
+  word-break: break-all;
+}
+
+.km-auth-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  background: var(--km-sky-wash);
+  color: #14566B;
+  border-radius: var(--km-radius-sm);
+  padding: 10px 12px;
+  font-size: 16px;
+  font-weight: 800;
+}
+.km-auth-status svg { width: 22px; height: 22px; flex: 0 0 auto; }
+
+.km-auth-meta {
+  margin-top: 8px;
+  font-size: 14px;
+  color: var(--km-text-faint);
+}
+
+.km-auth-error {
+  background: var(--km-orange-wash);
+  color: #8A4A16;
+  border-radius: var(--km-radius-sm);
+  padding: 10px 12px;
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1.5;
+}
+.km-auth-error[hidden] { display: none; }
+
+.km-input {
+  width: 100%;
+  min-height: var(--km-tap-sm);
+  border-radius: var(--km-radius-md);
+  border: 3px solid var(--km-line);
+  background: #fff;
+  font-family: inherit;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--km-text);
+  padding: 10px 16px;
+  box-shadow: inset 0 2px 4px rgba(61, 44, 30, 0.08);
+}
+.km-input::placeholder { color: var(--km-text-faint); font-weight: 400; }
+.km-input:focus {
+  outline: none;
+  border-color: var(--km-sky);
+}
+/* 首页顶部的云同步状态胶囊 */
+.km-syncline {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: var(--km-radius-pill);
+  background: #fff;
+  color: var(--km-text-soft);
+  font-size: 14px;
+  font-weight: 700;
+  box-shadow: 0 3px 0 var(--km-line);
+  cursor: pointer;
+  border: 0;
+  transition: transform var(--km-dur-tap) ease;
+}
+.km-syncline:active { transform: translateY(3px); }
+.km-syncline svg { width: 18px; height: 18px; }

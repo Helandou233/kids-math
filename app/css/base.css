@@ -1,0 +1,154 @@
+/* ============================================================
+   base.css —— 重置、移动端优先布局、安全区、排版
+   第一设计尺寸：手机竖屏 390×844；向上适配平板 / PC。
+   禁止横向滚动。
+   ============================================================ */
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+html {
+  /* 禁止横向滚动 */
+  overflow-x: hidden;
+}
+
+body {
+  background: var(--km-bg);
+  color: var(--km-text);
+  font-family: "PingFang SC", "HarmonyOS Sans SC", "Hiragino Sans GB",
+               "Microsoft YaHei", "Source Han Sans SC", "Noto Sans CJK SC",
+               system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: var(--km-fs-body);
+  line-height: 1.55;
+  /* 禁止横向滚动 + 禁止双击缩放导致的抖动 */
+  overflow-x: hidden;
+  overscroll-behavior-y: contain;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 数字统一使用等宽感更强的系统字体栈，避免跳动 */
+.km-num {
+  font-family: "SF Mono", "Menlo", "Consolas", "PingFang SC", monospace;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+h1, h2, h3, h4, p, ul, ol {
+  margin: 0;
+  padding: 0;
+}
+
+ul, ol { list-style: none; }
+
+button {
+  font-family: inherit;
+  font-size: var(--km-fs-btn);
+  color: inherit;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+/* ---------- 应用外壳 ---------- */
+.km-app {
+  position: relative;
+  width: 100%;
+  max-width: var(--km-max-width);
+  min-height: 100%;
+  margin: 0 auto;
+  padding-left: calc(var(--km-page-pad) + var(--km-safe-l));
+  padding-right: calc(var(--km-page-pad) + var(--km-safe-r));
+  padding-top: calc(12px + var(--km-safe-t));
+  padding-bottom: calc(24px + var(--km-safe-b));
+  overflow-x: hidden;
+}
+
+/* 页面切换动画（≤250ms） */
+.km-page {
+  display: block;
+  animation: km-page-in var(--km-dur-page) ease-out both;
+}
+.km-page.km-page-out {
+  animation: km-page-out 140ms ease-in both;
+}
+
+@keyframes km-page-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes km-page-out {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(-8px); }
+}
+
+/* ---------- 顶部栏 ---------- */
+.km-topbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  min-height: 48px;
+}
+
+.km-topbar__title {
+  flex: 1 1 auto;
+  font-size: var(--km-fs-title);
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.km-topbar__spacer { flex: 1 1 auto; }
+
+/* ---------- 区块 ---------- */
+.km-section {
+  margin-bottom: 22px;
+}
+
+.km-section__title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 20px;
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+
+.km-section__hint {
+  font-size: 15px;
+  color: var(--km-text-soft);
+  margin-bottom: 10px;
+}
+
+/* ---------- 文本工具 ---------- */
+.km-text-soft { color: var(--km-text-soft); }
+.km-text-faint { color: var(--km-text-faint); }
+.km-center { text-align: center; }
+.km-bold { font-weight: 800; }
+.km-mt-8 { margin-top: 8px; }
+.km-mt-14 { margin-top: 14px; }
+.km-mt-22 { margin-top: 22px; }
+.km-mb-14 { margin-bottom: 14px; }
+
+/* 一屏只做一件事：区块之间留足呼吸感 */
+.km-stack > * + * { margin-top: var(--km-gap); }
+
+/* 无障碍：只读但可被读屏朗读 */
+.km-sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}

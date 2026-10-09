@@ -1,0 +1,57 @@
+sequenceDiagram
+    participant U as 儿童/家长
+    participant App as Web App
+    participant DB as IndexedDB
+    participant Auth as Auth API
+    participant Points as Points API
+    participant PG as PostgreSQL
+
+    U->>App: 打开应用
+    App->>DB: 同步读取本机档案与已确认积分快照
+    DB-->>App: profile + confirmedSnapshot + pending
+    App-->>U: 立即渲染本地首页（不等待网络）
+    alt 离线且租约有效
+      App-->>U: 本机快速进入；练习可用
+    else 在线登录
+      U->>App: 选择头像+PIN，或家长OTP
+      App->>Auth: POST login
+      Auth-->>App: accessToken + refreshCookie + offlineLease
+    end
+    App->>Points: GET /points/account
+    Points->>PG: 读取权威账户
+    PG-->>Points: serverSnapshot
+    Points-->>App: serverSnapshot
+    App->>DB: 读取 PENDING/RETRY 流水
+    alt 有待上报正向积分事件
+      App->>Points: POST /points/ledger:sync（批量，幂等键）
+      loop 每条事件
+        Points->>PG: 唯一键去重 + 锁账户/计数器 + 规则重算
+        PG-->>Points: APPLIED / DUPLICATE / CAPPED / REJECTED
+      end
+      Points-->>App: 每条结果 + 最终权威快照
+      App->>DB: 单事务ack已受理键并替换确认快照
+    else 无待上报事件
+      App->>DB: 替换确认快照
+    end
+    App-->>U: 数字平滑跳到最新值；显示“已同步”
+
+%% H-12 ~ H-16（PRD v1.1）：pending 上报触发点
+sequenceDiagram
+    participant P as 练习页/首页
+    participant S as SyncCoordinator
+    participant DB as IndexedDB pending_ledger
+    participant API as Points API
+
+    Note over P,API: (a) 每答对1题 (b) 结算页 (c) 切后台/visibilitychange
+    Note over P,API: (d) 积分变动后 (e) online事件 (f) 20分钟休息蒙层
+    P->>S: 触发点命中 → flushPending()
+    S->>DB: 读取 synced=false 的 pending
+    alt 联网
+      S->>API: POST /points/ledger:sync（clientBatchId + 各条幂等键）
+      API-->>S: APPLIED / DUPLICATE / CAPPED / REJECTED
+      S->>DB: 置 synced=true 并替换确认快照
+    else 离线
+      S->>DB: 保持 pending，state=RETRY + 指数退避
+      S-->>P: H-13 显示离线提示条
+    end
+    Note over P,API: H-14 退出前提醒；H-16 beforeunload/pagehide 兜底；H-15 家长端展示上次同步时间与待同步积分
