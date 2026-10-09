@@ -99,6 +99,7 @@ node tools/uismoke.js   # UI 冒烟：猴子点击 400 次 + 25 个定向场景
 - 实现说明：[docs/IMPLEMENTATION.md](docs/IMPLEMENTATION.md)
 - 云同步：[docs/ACCOUNT_SYNC.md](docs/ACCOUNT_SYNC.md)
 - 部署：[docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)
+- 更新日志：[docs/CHANGELOG.md](docs/CHANGELOG.md)
 
 ## 隐私说明
 
